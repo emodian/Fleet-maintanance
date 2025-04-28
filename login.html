@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Fleet Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --text-light: #666;
+            --background-color: #f0f0f0;
+            --input-background: #ffffff;
+            --input-border: #ddd;
+            --input-focus-border: #3498db;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --font-family: 'Open Sans', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            background-image: url('truck.jpg'); /* Use a relative path */
+            background-size: cover; /* Ensure the image covers the entire screen */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: -1;
+        }
+
+        .login-container {
+            background-color: var(--input-background);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 450px;
+            max-width: 95%;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid var(--input-border);
+            backdrop-filter: blur(10px);
+            position: absolute; /* Position the login box absolutely */
+            top: 50%; /* Move to the vertical center */
+            left: 50%; /* Move to the horizontal center */
+            transform: translate(-50%, -50%); /* Adjust for the box's own dimensions */
+        }
+
+        .login-container h2 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .login-container form {
+            margin-bottom: 20px;
+        }
+
+        .login-container label {
+            display: block;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--input-border);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            color: var(--input-text-color);
+            background-color: var(--input-background);
+            transition: var(--transition);
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .login-container input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+        }
+
+        .login-container input::placeholder {
+            color: #aaa;
+            font-style: italic;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background-color: var(--primary-color);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-container button:hover {
+            background-color: darken(var(--primary-color), 10%);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 7px rgba(0, 0, 0, 0.15);
+        }
+
+        .login-links {
+            margin-top: 25px;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .login-links a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .login-links a:hover {
+            color: darken(var(--secondary-color), 15%);
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: auto;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        footer a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="login.php" method="POST">
+            <div class="form-group">
+                <label for="identifier">Username or Email</label>
+                <input type="text" id="identifier" name="identifier" placeholder="Enter your username or email" required>
+                <div id="identifier-error" class="error-message"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                <div id="password-error" class="error-message"></div>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <div class="login-links">
+            <a href="register.html">Register</a>
+            <a href="forgot-password.html">Forgot Password?</a>
+        </div>
+    </div>
+    <footer>
+        © 2025 Fleet Maintenance Management System<br>
+        Pope's Tr Headquarters | P.O.Box 1600 Dar es Salaam | Tanzania. | Phone: +255781636843 | Email: info@popestr.com | Website: <a href="http://www.popestr.com" target="_blank">www.popestr.com</a>
+    </footer>
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const identifierInput = document.getElementById('identifier');
+        const passwordInput = document.getElementById('password');
+        const identifierError = document.getElementById('identifier-error');
+        const passwordError = document.getElementById('password-error');
+
+        loginForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            let isValid = true;
+
+            if (!identifierInput.value.trim()) {
+                identifierError.textContent = 'Please enter your username or email.';
+                isValid = false;
+            } else {
+                identifierError.textContent = '';
+            }
+
+            if (!passwordInput.value.trim()) {
+                passwordError.textContent = 'Please enter your password.';
+                isValid = false;
+            } else {
+                passwordError.textContent = '';
+            }
+
+            if (isValid) {
+                // In a real application, you would send the identifier and password to the server for authentication.
+                // For this example, we'll just simulate a successful login.
+                alert('Login successful!');
+                window.location.href = 'dashboard.php';
+            }
+        });
+
+        identifierInput.addEventListener('focus', () => {
+            identifierError.textContent = '';
+        });
+
+        passwordInput.addEventListener('focus', () => {
+            passwordError.textContent = '';
+        });
+    </script>
+</body>
+</html>
