@@ -1,5 +1,5 @@
 <?php
-// Establish database connection
+// Database connection
 $conn = new mysqli("localhost", "root", "", "fleet_management");
 
 // Check connection
@@ -7,240 +7,212 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch inventory items from the database
-$query = "SELECT * FROM inventory";
-$result = $conn->query($query);
-
-// Check if the query was successful
-if (!$result) {
-    die("Error executing query: " . $conn->error);
-}
+// Include CSS and Font Awesome
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory | Fleet Management System</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script> <style>
+    <title>Fleet Maintenance Inventory</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
         body {
-            font-family: 'Inter', sans-serif; /* More modern font */
-            background-color: #f9f9f9; /* Soft background color */
-            margin: 0;
-            padding: 0;
-            color: #333; /* Darker default text color for better readability */
+            padding: 20px;
+            background-color: #f8f9fa;
         }
-        .dashboard-container {
-            max-width: 1000px; /* Increased max-width for larger screens */
-            margin: 20px auto;
-            padding: 30px; /* Increased padding for more spacing */
-            background-color: #fff;
-            border-radius: 12px; /* Slightly more rounded corners */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* More subtle shadow */
-        }
-        h1 {
-            color: #2c3e50; /* Darker heading color */
-            margin-bottom: 25px; /* Increased margin */
-            text-align: center; /* Center heading */
-            font-weight: 600; /* Use semibold font weight for headings */
-            display: flex; /* Use flexbox for alignment */
-            align-items: center; /* Vertically center icon and text */
-            gap: 10px; /* Space between icon and text */
-        }
-        h1 i {
-            color: #3498db; /* Accent color for the icon */
-            font-size: 1.8em; /* Larger icon size */
-        }
-        p {
-            color: #666; /* Slightly darker paragraph color */
-            margin-bottom: 30px; /* Increased margin */
-            text-align: center;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #fff;
-            border-radius: 10px; /* Rounded corners for table */
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* Very subtle table shadow */
-            overflow: hidden; /* Needed for rounded corners on table */
+        .card {
             margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
-        table thead th {
-            background-color: #ecf0f1; /* Lighter header background */
-            color: #34495e; /* Darker header text */
-            padding: 15px; /* Increased header padding */
-            text-align: left;
-            font-weight: 500; /* Medium font weight for headers */
-            border-bottom: 2px solid #ddd; /* Lighter bottom border */
-        }
-        table tbody tr:nth-child(odd) {
-            background-color: #f5f5f5; /* Very light background for odd rows */
-        }
-        table tbody tr:hover {
-            background-color: #e0f7fa; /* Very light hover background */
-            transition: background-color 0.2s ease; /* Smooth transition */
-        }
-        table td {
-            padding: 15px; /* Increased cell padding */
-            border-bottom: 1px solid #eee; /* Very light bottom border */
-            color: #555; /* Slightly darker cell text */
-        }
-        table td a {
-            text-decoration: none;
-            font-weight: 500; /* Medium font weight for links */
-            transition: color 0.2s ease; /* Smooth transition */
-        }
-        table td a:hover {
-            opacity: 0.8; /* Slightly fade on hover */
-        }
-        table td a.edit {
-            color: #3498db; /* Blue for edit */
-        }
-        table td a.edit:hover {
-            color: #2980b9; /* Darker blue on hover */
-        }
-        table td a.delete {
-            color: #e74c3c; /* Red for delete */
-        }
-        table td a.delete:hover {
-            color: #c0392b; /* Darker red on hover */
-        }
-        .actions {
-            display: flex;
-            gap: 10px; /* Space between action links */
-        }
-        .add-new-item {
-            display: inline-flex; /* Use inline-flex for better alignment */
-            align-items: center;
-            gap: 8px; /* Space between icon and text */
-            padding: 12px 20px;
-            background-color: #2ecc71; /* Green add button */
+        .card-header {
+            background-color: #343a40;
             color: white;
-            text-decoration: none;
-            border-radius: 6px; /* Slightly more rounded */
-            font-weight: 500; /* Medium font weight */
-            transition: background-color 0.2s ease, transform 0.1s ease; /* Smooth transition */
-            margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Add a subtle shadow */
+            font-weight: bold;
         }
-        .add-new-item:hover {
-            background-color: #27ae60; /* Darker green on hover */
-            transform: translateY(-2px); /* Slight lift on hover */
+        .table-responsive {
+            overflow-x: auto;
         }
-        .add-new-item i {
-            font-size: 1.2em; /* Larger plus icon */
+        .badge {
+            font-size: 0.9em;
         }
-        .footer {
-            text-align: center;
-            margin-top: 30px; /* Increased margin */
-            font-size: 0.9rem;
-            color: #888; /* Lighter footer text */
-            padding-top: 20px;
-            border-top: 1px solid #eee; /* Very light top border */
+        .action-btns .btn {
+            margin-right: 5px;
         }
-        .footer a {
-            color: #3498db; /* Blue for link in footer */
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        .back-to-dashboard {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #3498db;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
+        .search-container {
             margin-bottom: 20px;
         }
-
-        .back-to-dashboard:hover {
-            color: #217dbb;
-        }
-
-        .back-to-dashboard i {
-            font-size: 1.2em;
-        }
-
-        /* Responsive adjustments for smaller screens */
-        @media screen and (max-width: 768px) {
-            .dashboard-container {
-                padding: 20px; /* Adjust padding for smaller screens */
-            }
-            table {
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-            table thead, table tbody tr {
-                display: table-row;
-            }
-            table thead th, table tbody td {
-                display: table-cell;
-                padding: 12px;
-            }
-            form {
-                grid-template-columns: 1fr; /* Stack form elements on small screens */
-                gap: 15px;
-            }
-            .full-width {
-                grid-column: span 1;
-            }
+        .category-filter {
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <a href="dashboard.php" class="back-to-dashboard">
-            <i class="fas fa-arrow-left"></i> Back to Dashboard
-        </a>
-        <h1><i class="fas fa-boxes-stacked"></i>Inventory Management</h1>
-        <p>Manage all inventory items in the system.</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Item Name</th>
-                    <th>Quantity</th>
-                    <th>Category</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if ($result && $result->num_rows > 0): ?>
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                        <tr>
-                            <td><?php echo $row['id']; ?></td>
-                            <td><?php echo htmlspecialchars($row['item_name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['quantity']); ?></td>
-                            <td><?php echo htmlspecialchars($row['category']); ?></td>
-                            <td>
-                                <div class="actions">
-                                    <a href="edit-inventory.php?id=<?php echo $row['id']; ?>" class="edit"><i class="fas fa-edit"></i> Edit</a>
-                                    <a href="delete-inventory.php?id=<?php echo $row['id']; ?>" class="delete" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fas fa-trash-alt"></i> Delete</a>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5" style="text-align: center;">No inventory items found.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-        <a href="add-inventory.php" class="add-new-item"><i class="fas fa-plus-circle"></i> Add New Item</a>
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2><i class="fas fa-boxes"></i> Fleet Maintenance Inventory</h2>
+                <a href="add_inventory.php" class="btn btn-success">
+                    <i class="fas fa-plus"></i> Add New Item
+                </a>
+            </div>
+            <div class="card-body">
+                <!-- Search and Filter Section -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="search-container">
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search inventory...">
+                                <button class="btn btn-outline-secondary" type="button" id="searchBtn">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="category-filter">
+                            <select class="form-select" id="categoryFilter">
+                                <option value="">All Categories</option>
+                                <option value="Engine Parts">Engine Parts</option>
+                                <option value="Transmission Parts">Transmission Parts</option>
+                                <option value="Brake System">Brake System</option>
+                                <option value="Suspension Parts">Suspension Parts</option>
+                                <option value="Electrical Components">Electrical Components</option>
+                                <option value="Tires & Wheels">Tires & Wheels</option>
+                                <option value="Fluids & Lubricants">Fluids & Lubricants</option>
+                                <option value="Filters">Filters</option>
+                                <option value="Body Parts">Body Parts</option>
+                                <option value="Lighting">Lighting</option>
+                                <option value="Tools & Equipment">Tools & Equipment</option>
+                                <option value="Safety Equipment">Safety Equipment</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory Table -->
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Part Number</th>
+                                <th>Part Name</th>
+                                <th>Category</th>
+                                <th>Quantity</th>
+                                <th>Assigned Vehicle</th>
+                                <th>Mechanic</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Fetch inventory data
+                            $sql = "SELECT * FROM inventory ORDER BY timestamp DESC";
+                            $result = $conn->query($sql);
+
+                            if ($result->num_rows > 0) {
+                                while($row = $result->fetch_assoc()) {
+                                    echo "<tr>";
+                                    echo "<td>" . $row['inventory_id'] . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['part_number']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($row['part_name']) . "</td>";
+                                    echo "<td><span class='badge bg-primary'>" . htmlspecialchars($row['category']) . "</span></td>";
+                                    echo "<td>" . $row['quantity'] . "</td>";
+                                    
+                                    // Display vehicle assignment
+                                    $vehicleInfo = "";
+                                    if (!empty($row['truck_plate_number'])) {
+                                        $vehicleInfo = "Truck: " . $row['truck_plate_number'];
+                                    }
+                                    if (!empty($row['trailer_plate_number'])) {
+                                        if (!empty($vehicleInfo)) $vehicleInfo .= "<br>";
+                                        $vehicleInfo .= "Trailer: " . $row['trailer_plate_number'];
+                                    }
+                                    echo "<td>" . $vehicleInfo . "</td>";
+                                    
+                                    echo "<td>" . (!empty($row['mechanics_name']) ? htmlspecialchars($row['mechanics_name']) : "-") . "</td>";
+                                    echo "<td>" . date('M d, Y H:i', strtotime($row['timestamp'])) . "</td>";
+                                    echo "<td class='action-btns'>";
+                                    echo "<a href='edit_inventory.php?id=" . $row['inventory_id'] . "' class='btn btn-sm btn-primary' title='Edit'><i class='fas fa-edit'></i></a>";
+                                    echo "<a href='delete_inventory.php?id=" . $row['inventory_id'] . "' class='btn btn-sm btn-danger' title='Delete' onclick='return confirm(\"Are you sure you want to delete this item?\")'><i class='fas fa-trash-alt'></i></a>";
+                                    echo "<a href='inventory_details.php?id=" . $row['inventory_id'] . "' class='btn btn-sm btn-info' title='View Details'><i class='fas fa-eye'></i></a>";
+                                    echo "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='9' class='text-center'>No inventory items found</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Total Items: <?php echo $result->num_rows; ?></p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button class="btn btn-outline-secondary" onclick="window.print()">
+                            <i class="fas fa-print"></i> Print Inventory
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <footer class="footer">
-        © 2025 Fleet Maintenance Management System<br>
-        Pope's Tr Headquarters | P.O.Box 1600 Dar es Salaam | Tanzania. | Phone: +255781636843 | Email: <a href="mailto:info@popestr.com">info@popestr.com</a> | Website: <a href="http://www.popestr.com" target="_blank">www.popestr.com</a>
-    </footer>
+
+    <!-- JavaScript for search and filter functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple search functionality
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                if (rowText.includes(searchText)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        // Category filter functionality
+        document.getElementById('categoryFilter').addEventListener('change', function() {
+            const selectedCategory = this.value;
+            const rows = document.querySelectorAll('tbody tr');
+            
+            rows.forEach(row => {
+                if (selectedCategory === '') {
+                    row.style.display = '';
+                } else {
+                    const categoryCell = row.querySelector('td:nth-child(4)');
+                    if (categoryCell.textContent.includes(selectedCategory)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        // Allow search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('searchBtn').click();
+            }
+        });
+    </script>
 </body>
 </html>
-<?php $conn->close(); ?>
+
+<?php
+$conn->close();
+?>
