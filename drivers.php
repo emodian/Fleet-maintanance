@@ -44,7 +44,7 @@ if (!$result) {
             background-color: #f4f4f9;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            min-height: 120vh;
         }
         .dashboard-container {
             max-width: 1200px;

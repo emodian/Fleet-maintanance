@@ -52,7 +52,9 @@ if ($conn->connect_error) {
     <div class="container-fluid">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h2><i class="fas fa-boxes"></i> Fleet Maintenance Inventory</h2>
+                <a href="dashboard.php" class="btn btn-outline-light btn-sm me-3" title="Back to Dashboard">
+                    <i class="fas fa-arrow-left"></i>Back to Dashbord </a>
+                <h2><i class="fas fa-boxes"></i>  Inventory</h2>
                 <a href="add_inventory.php" class="btn btn-success">
                     <i class="fas fa-plus"></i> Add New Item
                 </a>

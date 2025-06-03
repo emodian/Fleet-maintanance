@@ -18,11 +18,11 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $maintenance_id = get_input_data($_GET['id']);
 
     // Fetch the maintenance record to populate the form
-    $sql = "SELECT m.id, v.truck_plate_number, m.maintenance_type, m.date, m.status, u.username AS mechanic_username
+    $sql = "SELECT m.maintenance_id, v.truck_plate_number, m.maintenance_type, m.date, m.status, u.username AS mechanic_username
             FROM maintenance m
             JOIN vehicles v ON m.truck_plate_number = v.truck_plate_number
             LEFT JOIN users u ON m.mechanic_username = u.username
-            WHERE m.id = ?";
+            WHERE m.maintenance_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $maintenance_id);
     $stmt->execute();
